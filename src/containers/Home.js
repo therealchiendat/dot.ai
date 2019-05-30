@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import {Map, InfoWindow, Marker, GoogleApiWrapper,Polyline} from 'google-maps-react';
+import api from "./Resources/sensitive/api.json";
 import "./Home.css";
 
 export class Home extends React.Component {
@@ -8,7 +9,6 @@ export class Home extends React.Component {
     activeMarker: {},
     selectedPlace: {},
   };
-
   onMarkerClick = (props, marker, e) =>
     this.setState({
       selectedPlace: props,
@@ -25,6 +25,7 @@ export class Home extends React.Component {
     }
   };
   render() {
+
     const style = {
       width: 'auto',
       height: '100vh',
@@ -51,5 +52,5 @@ export class Home extends React.Component {
   }
 }
  export default GoogleApiWrapper({
-   apiKey: 'AIzaSyDu83zIs6jrdnI8xI_GtnhFvFWAEbdxZ6E'
+   apiKey: api.name
  })(Home)
