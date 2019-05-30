@@ -6,55 +6,33 @@ import trip1 from "./Resources/trips/2016-07-02--13-09-31.json";
 import "./Home.css";
 var i;
 export class Home extends React.Component {
+  state = {
+    showingInfoWindow: false,
+    activeMarker: {},
+    selectedPlace: {},
+  };
+  onMarkerClick = (props, marker, e) =>
+    this.setState({
+      selectedPlace: props,
+      activeMarker: marker,
+      showingInfoWindow: true
+    });
 
-  constructor(props) {
-		super(props);
-		this.state = {
+  onMapClicked = (props) => {
+    if (this.state.showingInfoWindow) {
+      this.setState({
         showingInfoWindow: false,
-        activeMarker: {},
-        selectedPlace: {},
-		};
-	}
-/*  rendertrip(coords){
-    return [{}].concat(coords).map(
-      (coords,i) =>
-        i!==0
-        ?
-          <Polyline
-              path=[{trip0.coords[i].lat,trip0.coords[i].lng},{trip0.coords[i+1].lat,trip0.coords[i+1].lng}]
-              strokeColor="#0000FF"
-              strokeOpacity={0.8}
-              strokeWeight={2}
-          />
-        :null
-    )
-  }*/
-  heatMapColorforValue(value){
-    var h = (40 - value)/40 * 150
-    return "hsl(" + h + ", 100%, 50%)";
-  }
-  renderpolyline(coords,speed){
-    var indents = [];
-    for(var i = 0; i < coords.length-1; i++){
-      indents.push(
-        <Polyline
-          path={[coords[i],coords[i+1]]}
-          strokeColor={speed[i]}
-          strokeOpacity={1}
-          strokeWeight={3}
-          />
-        );
-        };
-    return indents;
-  }
+        activeMarker: null
+      })
+    }
+  };
   render() {
     const coords=[{lat:trip0.coords[0].lat,lng:trip0.coords[0].lng}];
-    const speed=[this.heatMapColorforValue(trip0.coords[0].speed)];
+    const coords1=[{lat:trip1.coords[0].lat,lng:trip1.coords[0].lng}];
     for (i=1; i<trip0.coords.length; i++) {
       coords.push({lat:trip0.coords[i].lat,lng:trip0.coords[i].lng});
-      speed.push(this.heatMapColorforValue(trip0.coords[i].speed));
+      coords1.push({lat:trip1.coords[i].lat,lng:trip1.coords[i].lng});
     }
-    console.log(speed[1])
     const style = {
       width: 'auto',
       height: '80vh',
@@ -71,7 +49,25 @@ export class Home extends React.Component {
         <Marker onClick={this.onMarkerClick}
                 name={'Location tag'} />
 
-        {this.renderpolyline(coords,speed)}
+        <InfoWindow
+          marker={this.state.activeMarker}
+          visible={this.state.showingInfoWindow}>
+            <div>
+              <h1>{this.state.selectedPlace.name}</h1>
+            </div>
+        </InfoWindow>
+        <Polyline
+          path={coords}
+          strokeColor="#0000FF"
+          strokeOpacity={0.8}
+          strokeWeight={2}
+        />
+        <Polyline
+          path={coords1}
+          strokeColor="#0000FF"
+          strokeOpacity={0.8}
+          strokeWeight={2}
+        />
       </Map>
       </div>
     )
